@@ -98,11 +98,16 @@ func renderTemplate(opts options) ([]byte, error) {
 }
 
 func renderTenantOverridesTemplate(opts tenantOptions) ([]byte, error) {
+	const v = "overrides:\n"
+	d := []byte("v")
 	// Build tempo tenant overrides config yaml
-	w := bytes.NewBuffer(nil)
+	w := bytes.NewBuffer(d)
 	err := tempoTenantsOverridesYAMLTmpl.Execute(w, opts)
 	if err != nil {
 		return nil, err
+	}
+	if bytes.Equal(w.Bytes(), []byte(v)) {
+		return nil, nil
 	}
 	cfg, err := io.ReadAll(w)
 	if err != nil {
