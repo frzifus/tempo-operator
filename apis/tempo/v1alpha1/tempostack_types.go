@@ -227,6 +227,8 @@ const (
 	ReasonCouldNotGetOpenShiftBaseDomain ConditionReason = "CouldNotGetOpenShiftBaseDomain"
 	// ReasonCouldNotGetOpenShiftTLSPolicy when operator cannot get OpenShift TLS security cluster policy.
 	ReasonCouldNotGetOpenShiftTLSPolicy ConditionReason = "CouldNotGetOpenShiftTLSPolicy"
+	// ReasonMissingGatewayTenantSecret when operator cannot get Secret containing sensitive Gateway information.
+	ReasonMissingGatewayTenantSecret ConditionReason = "ReasonMissingGatewayTenantSecret"
 )
 
 // PermissionType is a Tempo Gateway RBAC permission.

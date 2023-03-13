@@ -7,6 +7,7 @@ import (
 	"text/template"
 
 	"github.com/os-observability/tempo-operator/apis/tempo/v1alpha1"
+	"github.com/os-observability/tempo-operator/internal/manifests/manifestutils"
 )
 
 var (
@@ -46,11 +47,11 @@ type options struct {
 	Name          string
 	BaseDomain    string
 	Tenants       *v1alpha1.TenantsSpec
-	TenantSecrets []*tenantSecret
+	TenantSecrets []*manifestutils.GatewayTenantSecret
 }
 
 // secret for clientID, clientSecret and issuerCAPath for tenant's authentication.
-type tenantSecret struct {
+type TenantSecret struct {
 	TenantName   string
 	ClientID     string
 	ClientSecret string

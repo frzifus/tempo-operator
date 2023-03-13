@@ -178,11 +178,27 @@ func (r *TempoStackReconciler) reconcileManifests(ctx context.Context, log logr.
 
 	}
 
+	tenantSecerts := []*manifestutils.GatewayTenantSecret{}
+	if tempo.Spec.Tenants != nil && tempo.Spec.Tenants.Mode == v1alpha1.Static && tempo.Spec.Tenants.Authorization != nil {
+		for _, auth := range tempo.Spec.Tenants.Authentication {
+			if auth.OIDC == nil || auth.OIDC.Secret == nil {
+				continue
+			}
+		}
+
+		tenantSecerts, err = gateway.GetTenantSecrets(ctx, r.Client, req, &tempo)
+		if err != nil {
+			return err
+		}
+		log.Info("gateway secerts set")
+	}
+
 	objects, err := manifests.BuildAll(manifestutils.Params{
-		Tempo:         tempo,
-		StorageParams: *storageConfig,
-		Gates:         r.FeatureGates,
-		TLSProfile:    tlsProfile,
+		Tempo:               tempo,
+		StorageParams:       *storageConfig,
+		Gates:               r.FeatureGates,
+		TLSProfile:          tlsProfile,
+		GatewayTenantSecret: tenantSecerts,
 	})
 	// TODO (pavolloffay) check error type and change return appropriately
 	if err != nil {
